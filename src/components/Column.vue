@@ -1,8 +1,7 @@
 <script setup lang="ts">
-defineProps<{
-  title?: string
-  cards?: any
-}>()
+import type { ColumnDto } from '../store'
+
+defineProps<ColumnDto>()
 </script>
 
 <template>
@@ -18,9 +17,9 @@ defineProps<{
 .column {
   flex-grow: 0;
   flex-shrink: 0;
-  width: 300px;
 
   background-color: #e0e0e0;
+  width: 300px;
   padding: 10px;
 }
 

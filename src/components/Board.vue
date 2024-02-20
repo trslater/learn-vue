@@ -1,17 +1,19 @@
 <script setup lang="ts">
-defineProps<{
-  data?: any
-}>()
+defineProps<{ title: string }>()
 </script>
 
 <template>
   <div class="board">
-    <slot></slot>
+    <h1>{{ title }}</h1>
+
+    <div class="columns">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.board {
+.columns {
   display: flex;
   align-items: flex-start;
   gap: 10px;

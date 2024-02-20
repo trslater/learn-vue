@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import Pill from './Pill.vue'
+import type { CardDto } from '../store'
 
-const props = defineProps<{
-  uuid?: string
-  title?: string
-  labels?: any
+const props = defineProps<CardDto>()
+
+const emit = defineEmits<{
+  mousedown: [event: any, uuid: string]
+  mousemove: [event: any, uuid: string]
+  mouseup: [event: any, uuid: string]
 }>()
-
-const emit = defineEmits(['mousedown', 'mousemove', 'mouseup'])
 </script>
 
 <template>
@@ -18,10 +18,6 @@ const emit = defineEmits(['mousedown', 'mousemove', 'mouseup'])
     @mouseup="emit('mouseup', $event, $props.uuid)"
   >
     <h3 class="card-heading">{{ title }}</h3>
-
-    <div class="labels">
-      <Pill :label="label" v-for="label in labels" />
-    </div>
   </div>
 </template>
 

@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { reactive, type App } from 'vue'
 import { v4 as uuid4 } from 'uuid'
 
 export const enum DragState {
@@ -7,119 +7,150 @@ export const enum DragState {
   Dragged = 2
 }
 
-interface Store {
+export interface AppStore {
   dragState: DragState
   dragTarget: string | undefined
   board: BoardDto
 }
 
-interface BoardDto {
-  columns: ColumnDto[]
+export interface ColumnStore {
+  byUuid: {
+    [uuid: string]: ColumnDto
+  }
+  uuids: string[]
 }
 
-interface ColumnDto {
+export interface CardStore {
+  byUuid: {
+    [uuid: string]: CardDto
+  }
+  uuids: string[]
+}
+
+export interface BoardDto {
   title: string
-  cards: CardDto[]
+  columnUuids: string[]
 }
 
-interface CardDto {
+export interface ColumnDto {
   uuid: string
   title: string
-  labels: string[]
+  cardUuids: string[]
 }
 
-export function getCardByUuid(uuid: string) {}
+export interface CardDto {
+  uuid: string
+  title: string
+}
 
-export const store: Store = reactive({
+export const appState: AppStore = reactive({
   dragState: DragState.Dropped,
   dragTarget: undefined,
   board: {
-    columns: [
-      {
-        title: 'Backlog',
-        cards: [
-          {
-            uuid: uuid4(),
-            title: 'Some task',
-            labels: ['feature', 'important']
-          },
-          {
-            uuid: uuid4(),
-            title: 'Another task',
-            labels: ['feature', 'important']
-          },
-          {
-            uuid: uuid4(),
-            title: 'Still more tasks',
-            labels: ['feature']
-          },
-          {
-            uuid: uuid4(),
-            title: "Uh oh, it's broken!",
-            labels: ['bug']
-          }
-        ]
-      },
-      {
-        title: 'Todo',
-        cards: [
-          {
-            uuid: uuid4(),
-            title: 'Some task',
-            labels: ['feature', 'important']
-          },
-          {
-            uuid: uuid4(),
-            title: 'Another task',
-            labels: ['feature', 'important']
-          },
-          {
-            uuid: uuid4(),
-            title: 'Still more tasks',
-            labels: ['feature']
-          },
-          {
-            uuid: uuid4(),
-            title: "Uh oh, it's broken!",
-            labels: ['bug']
-          }
-        ]
-      },
-      {
-        title: 'Doing',
-        cards: [
-          {
-            uuid: uuid4(),
-            title: 'Refactor this stuff',
-            labels: ['enhancement']
-          },
-          {
-            uuid: uuid4(),
-            title: 'Some bug',
-            labels: ['bug']
-          }
-        ]
-      },
-      {
-        title: 'Blocked',
-        cards: [
-          {
-            uuid: uuid4(),
-            title: 'New service',
-            labels: []
-          }
-        ]
-      },
-      {
-        title: 'Done',
-        cards: [
-          {
-            uuid: uuid4(),
-            title: 'Lots of new shiny things',
-            labels: ['feature']
-          }
-        ]
-      }
-    ]
+    title: 'My Board',
+    columnUuids: []
   }
 })
+
+export const columns: ColumnStore = reactive({
+  byUuid: {},
+  uuids: []
+})
+
+export const cards: CardStore = reactive({
+  byUuid: {},
+  uuids: []
+})
+
+function addColumn(uuid: string, title: string, cardUuids: string[]) {
+  columns.byUuid[uuid] = { uuid, title, cardUuids }
+  columns.uuids.push(uuid)
+}
+
+function addCard(uuid: string, title: string) {
+  cards.byUuid[uuid] = { uuid, title }
+  cards.uuids.push(uuid)
+}
+
+for (let card of [
+  {
+    uuid: uuid4(),
+    title: 'Some task'
+  },
+  {
+    uuid: uuid4(),
+    title: 'Another task'
+  },
+  {
+    uuid: uuid4(),
+    title: 'Still more tasks'
+  },
+  {
+    uuid: uuid4(),
+    title: "Uh oh, it's broken!"
+  },
+  {
+    uuid: uuid4(),
+    title: 'Some task'
+  },
+  {
+    uuid: uuid4(),
+    title: 'Another task'
+  },
+  {
+    uuid: uuid4(),
+    title: 'Still more tasks'
+  },
+  {
+    uuid: uuid4(),
+    title: "Uh oh, it's broken!"
+  },
+  {
+    uuid: uuid4(),
+    title: 'Refactor this stuff'
+  },
+  {
+    uuid: uuid4(),
+    title: 'Some bug'
+  },
+  {
+    uuid: uuid4(),
+    title: 'New service'
+  },
+  {
+    uuid: uuid4(),
+    title: 'Lots of new shiny things'
+  }
+]) {
+  addCard(card.uuid, card.title)
+}
+
+for (let { uuid, title, cardUuids } of [
+  {
+    uuid: uuid4(),
+    title: 'Backlog',
+    cardUuids: [cards.uuids[0], cards.uuids[1], cards.uuids[2], cards.uuids[3]]
+  },
+  {
+    uuid: uuid4(),
+    title: 'Todo',
+    cardUuids: [cards.uuids[4], cards.uuids[5], cards.uuids[6], cards.uuids[7]]
+  },
+  {
+    uuid: uuid4(),
+    title: 'Doing',
+    cardUuids: [cards.uuids[8], cards.uuids[9]]
+  },
+  {
+    uuid: uuid4(),
+    title: 'Blocked',
+    cardUuids: [cards.uuids[10]]
+  },
+  {
+    uuid: uuid4(),
+    title: 'Done',
+    cardUuids: [cards.uuids[11]]
+  }
+]) {
+  addColumn(uuid, title, cardUuids)
+}
