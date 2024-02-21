@@ -1,4 +1,4 @@
-import { reactive, type App } from 'vue'
+import { reactive } from 'vue'
 import { v4 as uuid4 } from 'uuid'
 
 export const enum DragState {
@@ -7,24 +7,16 @@ export const enum DragState {
   Dragged = 2
 }
 
-export interface AppStore {
+export interface Store {
   dragState: DragState
-  dragTarget: string | undefined
+  draggingCard: string | undefined
   board: BoardDto
-}
-
-export interface ColumnStore {
-  byUuid: {
+  columns: {
     [uuid: string]: ColumnDto
   }
-  uuids: string[]
-}
-
-export interface CardStore {
-  byUuid: {
+  cards: {
     [uuid: string]: CardDto
   }
-  uuids: string[]
 }
 
 export interface BoardDto {
@@ -41,36 +33,19 @@ export interface ColumnDto {
 export interface CardDto {
   uuid: string
   title: string
+  columnUuid?: string
 }
 
-export const appState: AppStore = reactive({
+export const store: Store = reactive({
   dragState: DragState.Dropped,
-  dragTarget: undefined,
+  draggingCard: undefined,
   board: {
     title: 'My Board',
     columnUuids: []
-  }
+  },
+  columns: {},
+  cards: {}
 })
-
-export const columns: ColumnStore = reactive({
-  byUuid: {},
-  uuids: []
-})
-
-export const cards: CardStore = reactive({
-  byUuid: {},
-  uuids: []
-})
-
-function addColumn(uuid: string, title: string, cardUuids: string[]) {
-  columns.byUuid[uuid] = { uuid, title, cardUuids }
-  columns.uuids.push(uuid)
-}
-
-function addCard(uuid: string, title: string) {
-  cards.byUuid[uuid] = { uuid, title }
-  cards.uuids.push(uuid)
-}
 
 for (let card of [
   {
@@ -122,35 +97,48 @@ for (let card of [
     title: 'Lots of new shiny things'
   }
 ]) {
-  addCard(card.uuid, card.title)
+  store.cards[card.uuid] = card
 }
 
-for (let { uuid, title, cardUuids } of [
+for (let column of [
   {
     uuid: uuid4(),
     title: 'Backlog',
-    cardUuids: [cards.uuids[0], cards.uuids[1], cards.uuids[2], cards.uuids[3]]
+    cardUuids: [
+      Object.keys(store.cards)[0],
+      Object.keys(store.cards)[1],
+      Object.keys(store.cards)[2],
+      Object.keys(store.cards)[3]
+    ]
   },
   {
     uuid: uuid4(),
     title: 'Todo',
-    cardUuids: [cards.uuids[4], cards.uuids[5], cards.uuids[6], cards.uuids[7]]
+    cardUuids: [
+      Object.keys(store.cards)[4],
+      Object.keys(store.cards)[5],
+      Object.keys(store.cards)[6],
+      Object.keys(store.cards)[7]
+    ]
   },
   {
     uuid: uuid4(),
     title: 'Doing',
-    cardUuids: [cards.uuids[8], cards.uuids[9]]
+    cardUuids: [Object.keys(store.cards)[8], Object.keys(store.cards)[9]]
   },
   {
     uuid: uuid4(),
     title: 'Blocked',
-    cardUuids: [cards.uuids[10]]
+    cardUuids: [Object.keys(store.cards)[10]]
   },
   {
     uuid: uuid4(),
     title: 'Done',
-    cardUuids: [cards.uuids[11]]
+    cardUuids: [Object.keys(store.cards)[11]]
   }
 ]) {
-  addColumn(uuid, title, cardUuids)
+  store.columns[column.uuid] = column
+  column.cardUuids.forEach((cardUuid) => {
+    store.cards[cardUuid].columnUuid = column.uuid
+  })
 }
