@@ -13,9 +13,15 @@ defineProps<{ title: string }>()
 </template>
 
 <style scoped>
+.board {
+  padding: 20px;
+}
+
 .columns {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 10px;
+
+  overflow-x: scroll;
 }
 </style>

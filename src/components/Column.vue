@@ -9,19 +9,25 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="column">
-    <h2 class="column-heading" @mouseup="emit('mouseup', $event, uuid)">{{ title }}</h2>
-    <div class="cards">
-      <slot></slot>
+  <div class="column-wrapper" @mouseup="emit('mouseup', $event, uuid)">
+    <div class="column">
+      <h2 class="column-heading">{{ title }}</h2>
+      <div class="cards">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.column {
+.column-wrapper {
   flex-grow: 0;
   flex-shrink: 0;
 
+  background-color: white;
+}
+
+.column {
   background-color: #e0e0e0;
   width: 300px;
   padding-block: 5px;
