@@ -2,11 +2,15 @@
 import type { ColumnDto } from '../store'
 
 defineProps<ColumnDto>()
+
+const emit = defineEmits<{
+  mouseup: [event: any, uuid: string]
+}>()
 </script>
 
 <template>
   <div class="column">
-    <h2 class="column-heading">{{ title }}</h2>
+    <h2 class="column-heading" @mouseup="emit('mouseup', $event, uuid)">{{ title }}</h2>
     <div class="cards">
       <slot></slot>
     </div>
@@ -20,19 +24,18 @@ defineProps<ColumnDto>()
 
   background-color: #e0e0e0;
   width: 300px;
-  padding: 10px;
+  padding-block: 5px;
 }
 
 .column-heading {
   font-size: 16px;
 
+  padding: 5px 10px;
   margin: 0;
-  margin-bottom: 10px;
 }
 
 .cards {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 </style>

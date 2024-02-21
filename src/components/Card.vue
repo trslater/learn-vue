@@ -12,16 +12,22 @@ const emit = defineEmits<{
 
 <template>
   <div
-    class="card"
+    class="card-container"
     @mousedown="emit('mousedown', $event, $props.uuid)"
     @mousemove="emit('mousemove', $event, $props.uuid)"
     @mouseup="emit('mouseup', $event, $props.uuid)"
   >
-    <h3 class="card-heading">{{ title }}</h3>
+    <div class="card">
+      <h3 class="card-heading">{{ title }}</h3>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.card-container {
+  padding: 5px 10px;
+}
+
 h3 {
   margin: 0;
 }
