@@ -4,7 +4,7 @@ defineProps<{ title: string }>()
 
 <template>
   <div class="board">
-    <h1>{{ title }}</h1>
+    <h1 class="board-heading">{{ title }}</h1>
 
     <div class="columns">
       <slot></slot>
@@ -14,7 +14,17 @@ defineProps<{ title: string }>()
 
 <style scoped>
 .board {
+  /* position: static; */
+  display: flex;
+  flex-direction: column;
+
+  background-color: dodgerblue;
+  height: 100%;
   padding: 20px;
+}
+
+.board-heading {
+  color: white;
 }
 
 .columns {

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { CardDto } from '../store'
+import type { CardDto } from '../types'
 
 const props = defineProps<CardDto>()
 
 const emit = defineEmits<{
   mousedown: [event: any, uuid: string]
   mousemove: [event: any, uuid: string]
+  mouseover: [event: any, uuid: string]
   mouseup: [event: any, uuid: string]
 }>()
 </script>
@@ -14,6 +15,7 @@ const emit = defineEmits<{
   <div
     class="card-wrapper"
     @mousemove="emit('mousemove', $event, $props.uuid)"
+    @mouseover="emit('mouseover', $event, $props.uuid)"
     @mouseup="emit('mouseup', $event, $props.uuid)"
   >
     <div class="card" @mousedown="emit('mousedown', $event, $props.uuid)">
@@ -25,10 +27,6 @@ const emit = defineEmits<{
 <style scoped>
 .card-wrapper {
   padding: 5px 10px;
-}
-
-.card:active {
-  cursor: grabbing;
 }
 
 h3 {
@@ -43,6 +41,7 @@ h3 {
   background-color: white;
   height: 150px;
   padding: 20px;
+  border-radius: 3px;
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
 }
 

@@ -13,6 +13,9 @@ random.shuffle(CARD_NAMES)
 
 data = {"columns": {}, "cards": {}}
 
+if not (len(COLUMN_NAMES) == len(ADJECTIVES) == len(NOUNS)):
+    exit(1)
+
 for i in range(len(COLUMN_NAMES)):
     columnUuid = str(uuid4())
 
