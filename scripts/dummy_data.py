@@ -11,7 +11,14 @@ CARD_NAMES = [" ".join(words) for words in product(ADJECTIVES, NOUNS)]
 
 random.shuffle(CARD_NAMES)
 
-data = {"columns": {}, "cards": {}}
+data = {"columns": {
+    "byUuid": {},
+    "uuidByCardUuid": {},
+},
+    "cards": {
+    "byUuid": {},
+    "uuidsByColumnUuid": {},
+}}
 
 if not (len(COLUMN_NAMES) == len(ADJECTIVES) == len(NOUNS)):
     exit(1)
@@ -19,20 +26,23 @@ if not (len(COLUMN_NAMES) == len(ADJECTIVES) == len(NOUNS)):
 for i in range(len(COLUMN_NAMES)):
     columnUuid = str(uuid4())
 
-    data["columns"][columnUuid] = {
+    data["columns"]["byUuid"][columnUuid] = {
         "uuid": columnUuid,
-        "title": COLUMN_NAMES[i],
-        "cardUuids": [],
+        "heading": COLUMN_NAMES[i],
     }
+
+    data["cards"]["uuidsByColumnUuid"][columnUuid] = []
 
     for j in range(len(ADJECTIVES)):
         cardUuid = str(uuid4())
 
-        data["columns"][columnUuid]["cardUuids"].append(cardUuid)
-        data["cards"][cardUuid] = {
+        data["cards"]["byUuid"][cardUuid] = {
             "uuid": cardUuid,
             "title": CARD_NAMES[i * 5 + j],
-            "columnUuid": columnUuid,
         }
+
+        # Create bidirectional relationship
+        data["columns"]["uuidByCardUuid"][cardUuid] = columnUuid
+        data["cards"]["uuidsByColumnUuid"][columnUuid].append(cardUuid)
 
 print(json.dumps(data))
