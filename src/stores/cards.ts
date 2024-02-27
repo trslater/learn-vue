@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { v4 as uuid4 } from "uuid"
 import dummyData from "../../data/dummy.json"
 
 export const useCardStore = defineStore('cards', {
@@ -9,6 +10,20 @@ export const useCardStore = defineStore('cards', {
   getters: {
     byColumnUuid: (cards) => (columnUuid: string): Card[] =>
       cards.uuidsByColumnUuid[columnUuid].map(uuid => cards.byUuid[uuid])
+  },
+  actions: {
+    new: function (newCardTitle: string) {
+      if (newCardTitle === '') return
+
+      const newCard: Card = {
+        uuid: uuid4(),
+        title: newCardTitle
+      }
+
+      this.byUuid[newCard.uuid] = newCard
+
+      return newCard.uuid
+    }
   }
 })
 

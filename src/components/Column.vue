@@ -1,7 +1,18 @@
 <script setup lang="ts">
 import type { Column } from '@/stores/columns'
 
-defineProps<Column>()
+const props = defineProps<Column>()
+const emit = defineEmits<{
+  enterup: [uuid: string, newCardTitle: string]
+}>()
+
+function onKeyUp(event: KeyboardEvent) {
+  if (event.key !== 'Enter' || !(event.currentTarget instanceof HTMLInputElement)) return
+
+  emit('enterup', props.uuid, event.currentTarget.value)
+
+  event.currentTarget.value = ''
+}
 </script>
 
 <template>
@@ -10,6 +21,7 @@ defineProps<Column>()
       <h2 class="column-heading">{{ heading }}</h2>
       <div class="cards">
         <slot></slot>
+        <input type="text" class="new-card-input" name="new-card" placeholder="New card..." @keyup="onKeyUp">
       </div>
     </div>
   </div>
@@ -41,5 +53,10 @@ defineProps<Column>()
 .cards {
   display: flex;
   flex-direction: column;
+}
+
+.new-card-input {
+  padding: 10px;
+  margin: 5px 10px;
 }
 </style>

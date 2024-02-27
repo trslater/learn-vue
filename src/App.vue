@@ -13,7 +13,7 @@ const cards = useCardStore()
 
 <template>
   <Board :title="board.title">
-    <Column v-for="column in columns.byUuid" v-bind="column" :show-drop-target="false">
+    <Column v-for="column in columns.byUuid" v-bind="column" :show-drop-target="false" @enterup="columns.appendNewCard">
       <Card v-for="card in cards.byColumnUuid(column.uuid)" v-bind="card" @mousedown="board.grabCard"
         @mousemove="board.dragCard" @mouseup="board.dropCard" />
     </Column>
