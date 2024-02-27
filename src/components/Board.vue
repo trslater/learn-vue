@@ -4,7 +4,7 @@ defineProps<{ title: string }>()
 
 <template>
   <div class="board">
-    <h1 class="board-heading">{{ title }}</h1>
+    <h1 class="board-title">{{ title }}</h1>
 
     <div class="columns">
       <slot></slot>

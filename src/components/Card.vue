@@ -1,25 +1,29 @@
 <script setup lang="ts">
-import type { CardDto } from '../types'
+import type { Card } from '@/stores/cards'
 
-const props = defineProps<CardDto>()
+const props = defineProps<Card>()
 
 const emit = defineEmits<{
-  mousedown: [event: any, uuid: string]
-  mousemove: [event: any, uuid: string]
-  mouseover: [event: any, uuid: string]
-  mouseup: [event: any, uuid: string]
+  mousedown: [uuid: string]
+  mousemove: []
+  mouseup: [uuid: string, mouseOverBottomHalf: boolean]
 }>()
+
+function onMouseUp(event: MouseEvent) {
+  if (!(event.currentTarget instanceof Element)) return
+
+  const cardBounds = event.currentTarget.getBoundingClientRect()
+  const triggeredAtBottomHalf = (event.y - cardBounds.top) / cardBounds.height >= 0.5
+
+  emit('mouseup', props.uuid, triggeredAtBottomHalf)
+}
 </script>
 
+
 <template>
-  <div
-    class="card-wrapper"
-    @mousemove="emit('mousemove', $event, $props.uuid)"
-    @mouseover="emit('mouseover', $event, $props.uuid)"
-    @mouseup="emit('mouseup', $event, $props.uuid)"
-  >
-    <div class="card" @mousedown="emit('mousedown', $event, $props.uuid)">
-      <h3 class="card-heading">{{ title }}</h3>
+  <div class="card-wrapper" @mousemove="emit('mousemove')" @mouseup="onMouseUp">
+    <div class="card" @mousedown.prevent="emit('mousedown', uuid)">
+      <h3 class="card-title">{{ title }}</h3>
     </div>
   </div>
 </template>

@@ -1,35 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { ColumnDto } from '../types'
+import type { Column } from '@/stores/columns'
 
-const props = defineProps<
-  ColumnDto & {
-    showDropTarget: boolean
-  }
->()
-
-const dummy = ref<Element | null>(null)
-
-const emit = defineEmits<{
-  mouseover: [event: any, uuid: string]
-  mouseout: [event: any, uuid: string]
-  mouseup: [event: any, uuid: string]
-}>()
+defineProps<Column>()
 </script>
 
 <template>
-  <div
-    class="column-wrapper"
-    @mouseover="emit('mouseover', $event, uuid)"
-    @mouseout="emit('mouseout', $event, uuid)"
-    @mouseup="emit('mouseup', $event, uuid)"
-  >
+  <div class="column-wrapper">
     <div class="column">
-      <h2 class="column-heading">{{ title }}</h2>
+      <h2 class="column-heading">{{ heading }}</h2>
       <div class="cards">
         <slot></slot>
       </div>
-      <div v-show="showDropTarget" class="dummy">+</div>
     </div>
   </div>
 </template>
@@ -60,16 +41,5 @@ const emit = defineEmits<{
 .cards {
   display: flex;
   flex-direction: column;
-}
-
-.dummy {
-  display: flex;
-
-  background-color: rgba(green, 0.5);
-  height: 150px;
-  margin: 10px;
-  border: 1px dashed green;
-  align-items: center;
-  justify-content: center;
 }
 </style>
