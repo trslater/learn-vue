@@ -9,20 +9,20 @@ export const useBoardStore = defineStore('board', {
     dragState: DragState.Dropped
   }),
   actions: {
-    grabCard: function (cardUuid: string) {
+    grabCard: function () {
       if (this.dragState !== DragState.Dropped) return
+
+      this.dragState = DragState.Grabbed
+    },
+    dragCard: function (cardUuid: string) {
+      if (this.dragState !== DragState.Grabbed) return
 
       const columns = useColumnStore()
 
       this.grabbedCardUuid = cardUuid
       columns.removeCard(cardUuid)
 
-      this.dragState = DragState.Grabbed
-    },
-    dragCard: function () {
-      if (this.dragState === DragState.Grabbed) {
-        this.dragState = DragState.Dragging
-      }
+      this.dragState = DragState.Dragging
     },
     dropCard: function (targetUuid: string, insertBelow: boolean) {
       if (this.dragState === DragState.Grabbed) {

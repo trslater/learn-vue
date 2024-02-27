@@ -4,8 +4,8 @@ import type { Card } from '@/stores/cards'
 const props = defineProps<Card>()
 
 const emit = defineEmits<{
-  mousedown: [uuid: string]
-  mousemove: []
+  mousedown: []
+  mousemove: [uuid: string]
   mouseup: [uuid: string, mouseOverBottomHalf: boolean]
 }>()
 
@@ -21,8 +21,8 @@ function onMouseUp(event: MouseEvent) {
 
 
 <template>
-  <div class="card-wrapper" @mousemove="emit('mousemove')" @mouseup="onMouseUp">
-    <div class="card" @mousedown.prevent="emit('mousedown', uuid)">
+  <div class="card-wrapper" @mousemove="emit('mousemove', uuid)" @mouseup="onMouseUp">
+    <div class="card" @mousedown.prevent="emit('mousedown')">
       <h3 class="card-title">{{ title }}</h3>
     </div>
   </div>
