@@ -9,18 +9,14 @@ export const useBoardStore = defineStore('board', {
     dragState: DragState.Dropped
   }),
   actions: {
-    grabCard: function () {
+    grabCard: function (cardUuid: string) {
       if (this.dragState !== DragState.Dropped) return
 
+      this.grabbedCardUuid = cardUuid
       this.dragState = DragState.Grabbed
     },
-    dragCard: function (cardUuid: string) {
+    dragCard: function () {
       if (this.dragState !== DragState.Grabbed) return
-
-      const columns = useColumnStore()
-
-      this.grabbedCardUuid = cardUuid
-      columns.removeCard(cardUuid)
 
       this.dragState = DragState.Dragging
     },
@@ -36,7 +32,8 @@ export const useBoardStore = defineStore('board', {
 
         const destColumnUuid = columns.uuidByCardUuid[targetUuid]
         const index = cards.uuidsByColumnUuid[destColumnUuid].indexOf(targetUuid) + Number(insertBelow)
-
+        
+        columns.removeCard(this.grabbedCardUuid)
         columns.insertCard(destColumnUuid, index, this.grabbedCardUuid)
       }
 
